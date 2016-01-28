@@ -1,0 +1,3 @@
+[submodule "arow_csc"]
+	path = arow_csc
+	url = https://github.com/andreasvlachos/arow_csc.git
