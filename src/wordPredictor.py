@@ -2,11 +2,11 @@
 from _mycollections import mydefaultdict
 from mydouble import mydouble, counts
 
-sys.path.append(os.path.abspath("./imitation"))
+#sys.path.append(os.path.abspath("./imitation"))
 from stage import Stage
 #from collections import deque, Counter
 import random
-from copy import copy
+from copy import copy, deepcopy
 
 class WordPredictor(Stage):
 
@@ -24,36 +24,38 @@ class WordPredictor(Stage):
             return newone
 
     # the agenda for word prediction is one action per token
-    def __init__(self, state=None, instance=None, optArg=None):
+    def __init__(self, state=None, structuredInstance=None, optArg=None):
         super(WordPredictor, self).__init__()
-        self.possibleLabels = ["GOOD", "BAD"] # TODO: Whatever is the gold standard
+        self.possibleLabels = ["GOOD", "BAD"] # TODO: Whatever is the gold standard, could make it data dependent
         # Assume 0 indexing for the tokens
-        for tokenNo, token in enumerate(turn.parsedSentence.tokens):
+        if structuredInstance == None:
+            return
+        for tokenNo, token in enumerate(structuredInstance.input.tokens):
             newAction = WordPredictor.Action()
             newAction.tokenNo = tokenNo
             self.agenda.append(newAction)
 
-    def optimalPolicy(self, state, instance, action):
-        # TODO
-        # this should return the gold label for the action token as stated in the instance gold in instace.output
+    def optimalPolicy(self, state, structuredInstance, action):
+        # this returns the gold label for the action token as stated in the instance gold in instace.output
+        return structuredInstance.output.tags[action.tokenNo]
 
-        return label
-
-    def updateWithAction(self, state, action, turn):
+    def updateWithAction(self, state, action, structuredInstance):
         # one could update other bits of the state too as desired.
-            
         # add it as an action though
         self.actionsTaken.append(action)
 
     # TODO: all the feature engineering goes here
-    def extractFeatures(self, state, instance, action):
+    def extractFeatures(self, state, structuredInstance, action):
         # initialize the sparse vector
         features = mydefaultdict(mydouble)        
         # e.g the word itself that we are tagging
         # assuming that the instance has a parsedSentence field with appropriate structure
-        features["currentWord="+ instance.parsedSentence.tokens[action.tokenNo].string] = 1
+        features["currentWord="+ structuredInstance.input.tokens[action.tokenNo]] = 1
         
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
+        # e.g. the previous action
+        if len(self.actionsTaken)> 0:
+            features["prevPrediction="+ self.actionsTaken[-1].label] = 1
         
         # features based on earlier stages via the state variable.
 

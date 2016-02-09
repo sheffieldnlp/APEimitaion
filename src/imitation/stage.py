@@ -18,16 +18,16 @@ class Stage(object):
     def extractFeatures(self, state, mrl, action):
         pass
     
-    def optimalPolicy(self, state, instance, currentAction):
+    def optimalPolicy(self, state, structuredInstance, currentAction):
         pass
 
-    def updateWithAction(self, state, action, instance):
+    def updateWithAction(self, state, action, structuredInstance):
         pass
 
     # by default each stage predicts till the very end for action costing, but different stages might choose differently
     # this is only used for costing
-    def predict(self, instance, state, optimalPolicyProb, learner):
-        return learner.predict(instance, state, optimalPolicyProb)
+    def predict(self, structuredInstance, state, optimalPolicyProb, learner):
+        return learner.predict(structuredInstance, state, optimalPolicyProb)
 
     # by default it is the same is the evaluation for each stage
     # the object returned by the predict above should have the appropriate function

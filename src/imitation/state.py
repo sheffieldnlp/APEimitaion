@@ -33,6 +33,6 @@ class State(object):
 
 
     #  updates the state with an action 
-    def updateWithAction(self, action, turn):
+    def updateWithAction(self, action, structuredInstance):
         # call the function for the right stage
-        self.currentStages[self.currentStageNo].updateWithAction(self, action, turn)
+        self.currentStages[self.currentStageNo].updateWithAction(self, action, structuredInstance)

@@ -3,17 +3,21 @@
 import os
 import glob
 import sys
-sys.path.append(os.path.abspath("../../arow_csc"))
 from arow import *
 from _mycollections import mydefaultdict
 from mydouble import mydouble, counts
 from state import *
 from copy import deepcopy
+from structuredInstance import *
 
-class ImitationLearner():
-
+class ImitationLearner(object):
+    
+    stages = None
+    
     def __init__(self):
-        pass
+        self.stageNo2model = []
+        for stage in self.stages:
+            self.stageNo2model.append(AROW())        
 
     # this function predicts an instance given the state
     # state keeps track the various actions taken
@@ -21,12 +25,12 @@ class ImitationLearner():
     # it does change the state
     # the predicted MRL is returned in the end
     #@profile
-    def predict(self, instance, state, optimalPolicyProb=0.0):
+    def predict(self, structuredInstance, state, optimalPolicyProb=0.0):
 
         # if we haven't started predicting, initialize the state for utterance prediction
         if state.currentStageNo < 0:
             state.currentStageNo = 0
-            state.currentStages = [self.stages[state.currentStageNo][0](state, instance, self.stages[state.currentStageNo][1])]
+            state.currentStages = [self.stages[state.currentStageNo][0](state, structuredInstance, self.stages[state.currentStageNo][1])]
 
             
         # While we are not done (do-while loop with a break)
@@ -39,20 +43,20 @@ class ImitationLearner():
                 currentAction = state.currentStages[state.currentStageNo].agenda.popleft()
                 # extract features and add them to the action 
                 # (even for the optimal policy, it doesn't need the features but they are needed later on)
-                currentAction.features = state.currentStages[state.currentStageNo].extractFeatures(state, turn, currentAction)
+                currentAction.features = state.currentStages[state.currentStageNo].extractFeatures(state, structuredInstance, currentAction)
                 # the first condition is to avoid un-necessary calls to random which give me reproducibility headaches
                 if (optimalPolicyProb == 1.0) or (optimalPolicyProb > 0.0 and random.random() < optimalPolicyProb):
-                    currentAction.label = state.currentStages[state.currentStageNo].optimalPolicy(state, turn, currentAction)
+                    currentAction.label = state.currentStages[state.currentStageNo].optimalPolicy(state, structuredInstance, currentAction)
                     #print "action returned by optimal policy"
                     #print currentAction.label
                 else:
                     # predict (remember to wrap the features in the Instance)
                     # also we probably want to do some updating on the state, agendas, feature structures
-                    prediction = self.stageNo2model[state.currentStageNo].predict(Instance(currentAction.features), verbose)
+                    prediction = self.stageNo2model[state.currentStageNo].predict(Instance(currentAction.features))
                     # get the label of the prediction
                     currentAction.label = prediction.label
                 # add the action to the state making any necessary updates
-                state.updateWithAction(currentAction, turn)
+                state.updateWithAction(currentAction, structuredInstance)
                 #print len(state.currentStages[state.currentStageNo].agenda)
                 #print "dialog act after prediction"
                 #print state.currentDialogAct
@@ -76,7 +80,7 @@ class ImitationLearner():
             self.samplesPerAction = 3
 
     #@profile
-    def train(self, instances, modelFileName, params):
+    def train(self, structuredInstances, modelFileName, params):
         # for each stage create a dataset
         stageNo2training = []
         for stage in self.stages:
@@ -88,21 +92,23 @@ class ImitationLearner():
             optimalPolicyProb = pow(1-params.learningParam, iteration)
             print "Iteration:"+ str(iteration) + ", optimal policy prob:"+ str(optimalPolicyProb)
             
-            for instance in instances:
+            for structuredInstance in structuredInstances:
 
-                stateCopy = state.copyState()
+                state = State()
                 # so we got the predicted MRL and the actions taken are in state
                 # note that this prediction uses the gold turn and mrl since we need this info for the optimal policy actions
-                newOutput = self.predictUtterance(instance, state, optimalPolicyProb, True)
+                newOutput = self.predict(structuredInstance, state, optimalPolicyProb)
 
                 # check, is the current policy able to reproduce the gold?
-                instance.outpout.compareAgainst(newOutput)
-
+                structuredInstance.output.compareAgainst(newOutput)
+                
+                
+                stateCopy = State()
                 # for each action in every stage taken in predicting the MRL
                 for stageNo, stage in enumerate(state.currentStages):
                     # Enter the new stage, starting from 0
                     stateCopy.currentStageNo += 1
-                    stateCopy.currentStages.append(self.stages[stateCopy.currentStageNo][0](stateCopy, instance, self.stages[stateCopy.currentStageNo][1]))
+                    stateCopy.currentStages.append(self.stages[stateCopy.currentStageNo][0](stateCopy, structuredInstance, self.stages[stateCopy.currentStageNo][1]))
                     for action in stage.actionsTaken:
                         # now get the costs
                         costs = {}
@@ -118,13 +124,13 @@ class ImitationLearner():
                                 tempAction.features = action.features
                                 # force the label for the action
                                 tempAction.label = label
-                                stateCopyWithAction.updateWithAction(tempAction, instance)
+                                stateCopyWithAction.updateWithAction(tempAction, structuredInstance)
 
                                 # predict the rest
                                 # standard prediction
-                                outputGivenAction = self.predictUtterance(turn, stateCopyWithAction, optimalPolicyProb)
+                                outputGivenAction = self.predict(structuredInstance, stateCopyWithAction, optimalPolicyProb)
                                 # costing
-                                evalStats = stage.evaluate(outputGivenAction, instance.output)
+                                evalStats = stage.evaluate(outputGivenAction, structuredInstance.output)
 
                                 costs[label] += evalStats.loss
                                 
@@ -136,7 +142,7 @@ class ImitationLearner():
                         # update the stateCopy with the action originally chosen at prediction time
                         # dummy removal of the current action from the agenda
                         stateCopy.currentStages[stateCopy.currentStageNo].agenda.popleft()
-                        stateCopy.updateWithAction(action, instance)
+                        stateCopy.updateWithAction(action, structuredInstance)
                     
 
             # OK, let's save the training data and learn some classifiers            
