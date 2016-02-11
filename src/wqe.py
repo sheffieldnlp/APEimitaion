@@ -4,22 +4,21 @@
 import sys
 import os
 from numpy.f2py.auxfuncs import throw_error
-
-#sys.path.append(os.path.abspath("./imitation"))
 from imitation.imitationLearner import ImitationLearner
-
 from wordPredictor import WordPredictor
-
-import imitation.structuredInstance as si
+from imitation.structuredInstance import StructuredInput
+from imitation.structuredInstance import StructuredOutput
+from imitation.structuredInstance import StructuredInstance
+from imitation.structuredInstance import EvalStats
 from imitation.state import State
 
 class WQE(ImitationLearner):
 
     # specify the stages
-    stages=[[WordPredictor, None]]
+    stages=[[WordPredictor, None]]            
     def __init__(self):        
         super(WQE,self).__init__()
-            
+
 
     # convert the action sequence in the state to the actual prediction, i.e. a sequence of tags
     def stateToPrediction(self,state):
@@ -28,12 +27,12 @@ class WQE(ImitationLearner):
             tags.append(action.label)
         return WQEOutput(tags)
     
-class WQEInput(si.StructuredInput):
+class WQEInput(StructuredInput):
     def __init__(self, tokens):
         self.tokens = tokens
         
 
-class WQEOutput(si.StructuredOutput):
+class WQEOutput(StructuredOutput):
     def __init__(self, tags):
         self.tags = tags
         
@@ -51,14 +50,14 @@ class WQEOutput(si.StructuredOutput):
         return wqeEvalStats
 
 
-class WQEEvalStats(si.EvalStats):
+class WQEEvalStats(EvalStats):
     def __init__(self):    
         # number of incorrect tags
         self.loss = 0
         # accuracy
         self.accuracy = 1.0
 
-class WQEInstance(si.StructuredInstance):
+class WQEInstance(StructuredInstance):
     
     def __init__(self, tokens, tags=None):
         self.input = WQEInput(tokens)
