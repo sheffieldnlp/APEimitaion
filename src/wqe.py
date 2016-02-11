@@ -12,20 +12,24 @@ from imitation.structuredInstance import StructuredInstance
 from imitation.structuredInstance import EvalStats
 from imitation.state import State
 
+
 class WQE(ImitationLearner):
 
     # specify the stages
-    stages=[[WordPredictor, None]]            
+    stages = [[WordPredictor, None]]            
     def __init__(self):        
         super(WQE,self).__init__()
 
-
-    # convert the action sequence in the state to the actual prediction, i.e. a sequence of tags
-    def stateToPrediction(self,state):
+    def stateToPrediction(self, state):
+        """
+        Convert the action sequence in the state to the 
+        actual prediction, i.e. a sequence of tags
+        """
         tags = []
         for action in state.currentStages[0].actionsTaken:
             tags.append(action.label)
         return WQEOutput(tags)
+
     
 class WQEInput(StructuredInput):
     def __init__(self, tokens):
@@ -41,24 +45,22 @@ class WQEOutput(StructuredOutput):
             print "ERROR: different number of tags in predicted and gold"
             raise
         
-        wqeEvalStats = WQEEvalStats()
+        wqe_eval_stats = WQEEvalStats()
         for i in xrange(len(self.tags)):
             if self.tags[i] != other.tags[i]:
-                wqeEvalStats.loss+=1
+                wqe_eval_stats.loss+=1
         
-        wqeEvalStats.accuracy = (len(self.tags) - wqeEvalStats.loss)/float(len(self.tags))
-        return wqeEvalStats
+        wqe_eval_stats.accuracy = (len(self.tags) - wqe_eval_stats.loss) / float(len(self.tags))
+        return wqe_eval_stats
 
 
 class WQEEvalStats(EvalStats):
     def __init__(self):    
-        # number of incorrect tags
-        self.loss = 0
-        # accuracy
-        self.accuracy = 1.0
+        self.loss = 0 # number of incorrect tags
+        self.accuracy = 1.0        
+
 
 class WQEInstance(StructuredInstance):
-    
     def __init__(self, tokens, tags=None):
         self.input = WQEInput(tokens)
         self.output = WQEOutput(tags)
