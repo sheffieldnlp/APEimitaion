@@ -3,7 +3,7 @@ from _mycollections import mydefaultdict
 from mydouble import mydouble, counts
 
 #sys.path.append(os.path.abspath("./imitation"))
-from stage import Stage
+from imitation.stage import Stage
 #from collections import deque, Counter
 import random
 from copy import copy, deepcopy

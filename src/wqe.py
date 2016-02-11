@@ -5,13 +5,13 @@ import sys
 import os
 from numpy.f2py.auxfuncs import throw_error
 
-sys.path.append(os.path.abspath("./imitation"))
-from imitationLearner import ImitationLearner
+#sys.path.append(os.path.abspath("./imitation"))
+from imitation.imitationLearner import ImitationLearner
 
 from wordPredictor import WordPredictor
 
-from structuredInstance import *
-from state import *
+from imitation.structuredInstance import *
+from imitation.state import *
 
 class WQE(ImitationLearner):
 
