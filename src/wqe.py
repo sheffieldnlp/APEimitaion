@@ -10,8 +10,8 @@ from imitation.imitationLearner import ImitationLearner
 
 from wordPredictor import WordPredictor
 
-from imitation.structuredInstance import *
-from imitation.state import *
+import imitation.structuredInstance as si
+from imitation.state import State
 
 class WQE(ImitationLearner):
 
@@ -28,12 +28,12 @@ class WQE(ImitationLearner):
             tags.append(action.label)
         return WQEOutput(tags)
     
-class WQEInput(StructuredInput):
+class WQEInput(si.StructuredInput):
     def __init__(self, tokens):
         self.tokens = tokens
         
 
-class WQEOutput(StructuredOutput):
+class WQEOutput(si.StructuredOutput):
     def __init__(self, tags):
         self.tags = tags
         
@@ -51,14 +51,14 @@ class WQEOutput(StructuredOutput):
         return wqeEvalStats
 
 
-class WQEEvalStats(EvalStats):
+class WQEEvalStats(si.EvalStats):
     def __init__(self):    
         # number of incorrect tags
         self.loss = 0
         # accuracy
         self.accuracy = 1.0
 
-class WQEInstance(StructuredInstance):
+class WQEInstance(si.StructuredInstance):
     
     def __init__(self, tokens, tags=None):
         self.input = WQEInput(tokens)
