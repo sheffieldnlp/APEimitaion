@@ -72,10 +72,10 @@ if __name__ == "__main__":
     # load the MRL specification
     random.seed(13)
     
-    # load the dyads for training sunny is GOOD!
-    trainingInstances = [WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "GOOD", "GOOD","GOOD"]),
-                         WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "BAD", "BAD", "GOOD"]),
-                         WQEInstance(["walk", "shop", "shop", "clean"],["GOOD", "GOOD", "GOOD", "GOOD"])]
+    # load the dyads for training sunny is OK!
+    trainingInstances = [WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "OK", "OK","OK"]),
+                         WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "BAD", "BAD", "OK"]),
+                         WQEInstance(["walk", "shop", "shop", "clean"],["OK", "OK", "OK", "OK"])]
     
     testingInstances = [WQEInstance(["walk", "walk", "shop", "clean"]), 
                         WQEInstance(["clean", "walk", "tennis", "walk"])]
