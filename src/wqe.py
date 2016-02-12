@@ -61,9 +61,10 @@ class WQEEvalStats(EvalStats):
 
 
 class WQEInstance(StructuredInstance):
-    def __init__(self, tokens, tags=None):
+    def __init__(self, tokens, tags=None, obser_feats=None):
         self.input = WQEInput(tokens)
         self.output = WQEOutput(tags)
+        self.obser_feats = obser_feats # this should be a matrix feats x observations
 
 
 if __name__ == "__main__":

@@ -51,7 +51,12 @@ class WordPredictor(Stage):
         # e.g the word itself that we are tagging
         # assuming that the instance has a parsedSentence field with appropriate structure
         features["currentWord="+ structuredInstance.input.tokens[action.tokenNo]] = 1
-        
+
+        # More features, from the instance itself
+        word_feats = structuredInstance.obser_feats[action.tokenNo]
+        for i, feat in enumerate(word_feats):
+            features["feat %d" % i] = feat
+
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
         # e.g. the previous action
         if len(self.actionsTaken)> 0:

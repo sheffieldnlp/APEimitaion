@@ -4,18 +4,42 @@ import sys
 import os
 from imitation.state import State
 
-TRAIN_DIR = sys.argv[1]
-TEST_DIR = sys.argv[2]
+try:
+    TRAIN_DIR = sys.argv[1]
+    TEST_DIR = sys.argv[2]
+except IndexError:
+    TRAIN_DIR = '../data/wqe15/train'
+    TEST_DIR = '../data/wqe15/test'
+
 
 def load_data(_dir, mode):
     with open(os.path.join(_dir, mode + '.target')) as f:
         mt = [line.split() for line in f.readlines()]
     with open(os.path.join(_dir, mode + '.tags')) as f:
         tags = [line.split() for line in f.readlines()]
-    instances = [wqe.WQEInstance(x, y) for x, y in zip(mt, tags)]
+    feat_tensor = get_features(_dir, mode)
+    instances = [wqe.WQEInstance(x, y, feats) for x, y, feats in zip(mt, tags, feat_tensor)]
     return instances
 
-train_instances = load_data(TRAIN_DIR, 'train')#[:1000]
+
+def get_features(_dir, mode):
+    feat_tensor = []
+    with open(os.path.join(_dir, mode + '.features')) as f:
+        feat_matrix = []
+        for line in f:
+            if len(line) < 2:
+                feat_tensor.append(feat_matrix)
+                feat_matrix = []
+            else:
+                feat_vector = line.split('\t')
+                # As a first step we will only take the numerical features
+                feat_vector = feat_vector[0:2] + feat_vector[9:20]
+                feat_matrix.append(np.array(feat_vector, dtype=float))
+    return feat_tensor
+        
+    
+
+train_instances = load_data(TRAIN_DIR, 'train')#[:100]
 test_instances = load_data(TEST_DIR, 'test')
 
 #print [(inst.input.tokens, inst.output.tags) for inst in train_instances[:5]]
@@ -44,6 +68,6 @@ for instance in test_instances:
     state = State()
     results.append(' '.join(model.predict(instance, state).tags))
 
-with open('baseline.output', 'w') as f:
+with open('output', 'w') as f:
     f.write('\n'.join(results))
     f.write('\n')
