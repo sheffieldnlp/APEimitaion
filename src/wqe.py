@@ -73,14 +73,12 @@ if __name__ == "__main__":
     random.seed(13)
     
     # load the dyads for training sunny is GOOD!
-    trainingInstances = [\
-                         WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "GOOD", "GOOD","GOOD"]), \
-                         WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "BAD", "BAD", "GOOD"]),\
+    trainingInstances = [WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "GOOD", "GOOD","GOOD"]),
+                         WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "BAD", "BAD", "GOOD"]),
                          WQEInstance(["walk", "shop", "shop", "clean"],["GOOD", "GOOD", "GOOD", "GOOD"])]
     
-
-    testingInstances = [WQEInstance(["walk", "walk", "shop", "clean"]), WQEInstance(["clean", "walk", "tennis", "walk"])]
-    
+    testingInstances = [WQEInstance(["walk", "walk", "shop", "clean"]), 
+                        WQEInstance(["clean", "walk", "tennis", "walk"])]
     wqe = WQE()
     
     # set the params
