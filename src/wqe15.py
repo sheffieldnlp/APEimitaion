@@ -15,8 +15,8 @@ def load_data(_dir, mode):
     instances = [wqe.WQEInstance(x, y) for x, y in zip(mt, tags)]
     return instances
 
-train_instances = load_data(TRAIN_DIR, 'train')#[:000]
-test_instances = load_data(TEST_DIR, 'test')[:10]
+train_instances = load_data(TRAIN_DIR, 'train')#[:1000]
+test_instances = load_data(TEST_DIR, 'test')
 
 #print [(inst.input.tokens, inst.output.tags) for inst in train_instances[:5]]
 
@@ -32,8 +32,18 @@ params.samplesPerAction = 1
     
 model.train(train_instances, "temp", params)
 # TODO: This is a hack. Probably the state initialization should happen in the beginning of predict
-state = State()
-print model.predict(test_instances[0], state).tags
-print test_instances[0].output.tags
+
+#state = State()
+#model.predict(test_instances, state)
+#print model.predict(test_instances[0], state).tags
+#print test_instances[0].output.tags
 #state = State()
 #print model.predict(test_instances[0], state).tags
+results = []
+for instance in test_instances:
+    state = State()
+    results.append(' '.join(model.predict(instance, state).tags))
+
+with open('baseline.output', 'w') as f:
+    f.write('\n'.join(results))
+    f.write('\n')
