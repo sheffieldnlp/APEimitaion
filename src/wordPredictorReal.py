@@ -1,4 +1,4 @@
-# TODO: rename to wordTagger
+# TODO: rename to wordPredictor 
 
 from _mycollections import mydefaultdict
 from mydouble import mydouble, counts
@@ -27,7 +27,7 @@ class WordPredictor(Stage):
     # the agenda for word prediction is one action per token
     def __init__(self, state=None, structuredInstance=None, optArg=None):
         super(WordPredictor, self).__init__()
-        self.possibleLabels = ["OK", "BAD"] # TODO: Whatever is the gold standard, could make it data dependent
+        self.possibleLabels = ["KEEP", "REMOVE"] # Could be substitute, add, etc.
         # Assume 0 indexing for the tokens
         if structuredInstance == None:
             return
@@ -37,7 +37,8 @@ class WordPredictor(Stage):
             self.agenda.append(newAction)
 
     def optimalPolicy(self, state, structuredInstance, action):
-        # this returns the gold label for the action token as stated in the instance gold in instace.output
+        # this comes up with the next action in the sequence to convert the input to the correct output
+        # TODO: needs to infer the action given the input and output 
         return structuredInstance.output.tags[action.tokenNo]
 
     def updateWithAction(self, state, action, structuredInstance):

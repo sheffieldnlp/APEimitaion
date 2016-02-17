@@ -68,9 +68,9 @@ class ImitationLearner(object):
             else:
                 break
         # OK return the instance-levelprediction
-        return self.stateToPrediction(state)
+        return self.stateToPrediction(state, structuredInstance)
     
-    def stateToPrediction(self,state):
+    def stateToPrediction(self,state,structuredInstance):
         pass
 
     class params(object):

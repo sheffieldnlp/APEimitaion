@@ -11,8 +11,9 @@ from imitation.structuredInstance import StructuredOutput
 from imitation.structuredInstance import StructuredInstance
 from imitation.structuredInstance import EvalStats
 from imitation.state import State
+import numpy
 
-
+# TODO: Change WQE to APE
 class WQE(ImitationLearner):
 
     # specify the stages
@@ -25,10 +26,11 @@ class WQE(ImitationLearner):
         Convert the action sequence in the state to the 
         actual prediction, i.e. a sequence of tags
         """
-        tags = []
+        words = []
         for action in state.currentStages[0].actionsTaken:
-            tags.append(action.label)
-        return WQEOutput(tags)
+            if action.label == "OK":
+                words.append(wqeInstance.input.tokens[action.tokenNo])
+        return words
 
     
 class WQEInput(StructuredInput):
@@ -37,20 +39,38 @@ class WQEInput(StructuredInput):
         
 
 class WQEOutput(StructuredOutput):
-    def __init__(self, tags):
-        self.tags = tags
+    def __init__(self, tokens):
+        self.tokens = tokens
         
     def compareAgainst(self, other):
-        if len(self.tags) != len(other.tags):
-            print "ERROR: different number of tags in predicted and gold"
-            raise
-        
+        r = self.tokens
+        h = other.tokens
+                
         wqe_eval_stats = WQEEvalStats()
-        for i in xrange(len(self.tags)):
-            if self.tags[i] != other.tags[i]:
-                wqe_eval_stats.loss+=1
         
-        wqe_eval_stats.accuracy = (len(self.tags) - wqe_eval_stats.loss) / float(len(self.tags))
+        d = numpy.zeros((len(r)+1)*(len(h)+1), dtype=numpy.uint8)
+        d = d.reshape((len(r)+1, len(h)+1))
+        for i in range(len(r)+1):
+            for j in range(len(h)+1):
+                if i == 0:
+                    d[0][j] = j
+                elif j == 0:
+                    d[i][0] = i
+
+        # computation
+        for i in range(1, len(r)+1):
+            for j in range(1, len(h)+1):
+                if r[i-1] == h[j-1]:
+                    d[i][j] = d[i-1][j-1]
+                else:
+                    substitution = d[i-1][j-1] + 1
+                    insertion    = d[i][j-1] + 1
+                    deletion     = d[i-1][j] + 1
+                    d[i][j] = min(substitution, insertion, deletion)
+
+            
+        wqe_eval_stats.loss = d[len(r)][len(h)]
+        
         return wqe_eval_stats
 
 
