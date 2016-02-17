@@ -39,7 +39,11 @@ class WordPredictor(Stage):
     def optimalPolicy(self, state, instance, action):
         # this comes up with the next action in the sequence to convert the input to the correct output
         # TODO: needs to infer the action given the input and output 
-        return instance.output.align[action.tokenNo]
+        #return instance.output.align[action.tokenNo]
+        #print instance.input.tokens
+        #print instance.output.tokens
+        #print action.tokenNo
+        return instance.align[action.tokenNo] # not sure about this...
 
     def updateWithAction(self, state, action, instance):
         # one could update other bits of the state too as desired.

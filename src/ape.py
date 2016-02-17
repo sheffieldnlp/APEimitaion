@@ -28,9 +28,9 @@ class APE(ImitationLearner):
         """
         words = []
         for action in state.currentStages[0].actionsTaken:
-            if action.label == "OK":
+            if action.label == "KEEP":
                 words.append(ape_instance.input.tokens[action.tokenNo])
-        return words
+        return APEOutput(words)
 
     
 class APEInput(StructuredInput):
@@ -73,7 +73,8 @@ class APEOutput(StructuredOutput):
 
             
         ape_eval_stats.loss = d[len(r)][len(h)]
-        
+        ape_eval_stats.accuracy = d[len(r)][len(h)] / float(len(self.tokens))
+
         return ape_eval_stats
 
 
@@ -102,4 +103,15 @@ class APEInstance(StructuredInstance):
                 result.append("REMOVE")
             elif token == "I":
                 pass # making insertions explicit on purpose
+
+        # Having insertions ignored can make the alignment has less tags
+        # than the input. We pad then with "KEEP" tokens. This is probably
+        # wrong though...
+        while len(result) < len(self.input.tokens):
+            result.append("KEEP")
+        #print result
+        #print self.input.tokens
+        #print self.output.tokens
+        #print align
+        #assert len(result) == len(self.input.tokens)
         return result
