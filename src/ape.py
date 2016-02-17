@@ -5,7 +5,7 @@ import sys
 import os
 from numpy.f2py.auxfuncs import throw_error
 from imitation.imitationLearner import ImitationLearner
-from wordPredictor import WordPredictor
+from word_predictor import WordPredictor
 from imitation.structuredInstance import StructuredInput
 from imitation.structuredInstance import StructuredOutput
 from imitation.structuredInstance import StructuredInstance
@@ -14,14 +14,14 @@ from imitation.state import State
 import numpy
 
 # TODO: Change WQE to APE
-class WQE(ImitationLearner):
+class APE(ImitationLearner):
 
     # specify the stages
     stages = [[WordPredictor, None]]            
     def __init__(self):        
-        super(WQE,self).__init__()
+        super(APE, self).__init__()
 
-    def stateToPrediction(self, state, wqeInstance):
+    def stateToPrediction(self, state, ape_instance):
         """
         Convert the action sequence in the state to the 
         actual prediction, i.e. a sequence of tags
@@ -29,24 +29,27 @@ class WQE(ImitationLearner):
         words = []
         for action in state.currentStages[0].actionsTaken:
             if action.label == "OK":
-                words.append(wqeInstance.input.tokens[action.tokenNo])
+                words.append(ape_instance.input.tokens[action.tokenNo])
         return words
 
     
-class WQEInput(StructuredInput):
+class APEInput(StructuredInput):
     def __init__(self, tokens):
         self.tokens = tokens
         
 
-class WQEOutput(StructuredOutput):
+class APEOutput(StructuredOutput):
     def __init__(self, tokens):
         self.tokens = tokens
         
     def compareAgainst(self, other):
+        """
+        This is WER.
+        """
         r = self.tokens
         h = other.tokens
                 
-        wqe_eval_stats = WQEEvalStats()
+        ape_eval_stats = APEEvalStats()
         
         d = numpy.zeros((len(r)+1)*(len(h)+1), dtype=numpy.uint8)
         d = d.reshape((len(r)+1, len(h)+1))
@@ -69,51 +72,34 @@ class WQEOutput(StructuredOutput):
                     d[i][j] = min(substitution, insertion, deletion)
 
             
-        wqe_eval_stats.loss = d[len(r)][len(h)]
+        ape_eval_stats.loss = d[len(r)][len(h)]
         
-        return wqe_eval_stats
+        return ape_eval_stats
 
 
-class WQEEvalStats(EvalStats):
+class APEEvalStats(EvalStats):
     def __init__(self):    
         self.loss = 0 # number of incorrect tags
         self.accuracy = 1.0        
 
 
-class WQEInstance(StructuredInstance):
-    def __init__(self, tokens, tags=None, obser_feats=None):
-        self.input = WQEInput(tokens)
-        self.output = WQEOutput(tags)
+class APEInstance(StructuredInstance):
+    def __init__(self, in_tokens, out_tokens=None, obser_feats=None, align=None):
+        self.input = APEInput(in_tokens)
+        self.output = APEOutput(out_tokens)
         self.obser_feats = obser_feats # this should be a matrix feats x observations
+        self.align = self.edit_align(align)
 
-
-if __name__ == "__main__":
-    import random
-    # first file is the directory with the training data, second file is the name of the directory to save the model
-    # load the MRL specification
-    random.seed(13)
-    
-    # load the dyads for training sunny is OK!
-    trainingInstances = [WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "OK", "OK","OK"]),
-                         WQEInstance(["walk", "walk", "shop", "clean"],["BAD", "BAD", "BAD", "OK"]),
-                         WQEInstance(["walk", "shop", "shop", "clean"],["OK", "OK", "OK", "OK"])]
-    
-    testingInstances = [WQEInstance(["walk", "walk", "shop", "clean"]), 
-                        WQEInstance(["clean", "walk", "tennis", "walk"])]
-    wqe = WQE()
-    
-    # set the params
-    params = WQE.params()
-    # Setting this to one means on iteration, i.e. exact imitation. The learning rate becomes irrelevant then
-    params.iterations = 1
-    params.learningParam = 0.3
-    params.samplesPerAction = 1
-
-    
-    wqe.train(trainingInstances, "temp", params)
-    # TODO: This is a hack. Probably the state initialization should happen in the beginning of predict
-    state = State()
-    print wqe.predict(testingInstances[0], state).tags
-    state = State()
-    print wqe.predict(testingInstances[1], state).tags
-        
+    def edit_align(self, align):
+        """
+        Convert TER-like alignments to a simpler one.
+        """
+        result = []
+        for token in align:
+            if token == "A" or token == "S":
+                result.append("KEEP")
+            elif token == "D":
+                result.append("REMOVE")
+            elif token == "I":
+                pass # making insertions explicit on purpose
+        return result

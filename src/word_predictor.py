@@ -36,27 +36,27 @@ class WordPredictor(Stage):
             newAction.tokenNo = tokenNo
             self.agenda.append(newAction)
 
-    def optimalPolicy(self, state, structuredInstance, action):
+    def optimalPolicy(self, state, instance, action):
         # this comes up with the next action in the sequence to convert the input to the correct output
         # TODO: needs to infer the action given the input and output 
-        return structuredInstance.output.tags[action.tokenNo]
+        return instance.output.align[action.tokenNo]
 
-    def updateWithAction(self, state, action, structuredInstance):
+    def updateWithAction(self, state, action, instance):
         # one could update other bits of the state too as desired.
         # add it as an action though
         self.actionsTaken.append(action)
 
     # TODO: all the feature engineering goes here
-    def extractFeatures(self, state, structuredInstance, action):
+    def extractFeatures(self, state, instance, action):
         # initialize the sparse vector
         features = mydefaultdict(mydouble)        
         # e.g the word itself that we are tagging
         # assuming that the instance has a parsedSentence field with appropriate structure
-        features["currentWord="+ structuredInstance.input.tokens[action.tokenNo]] = 1
+        features["currentWord="+ instance.input.tokens[action.tokenNo]] = 1
 
         # More features, from the instance itself
-        if structuredInstance.obser_feats is not None:
-            word_feats = structuredInstance.obser_feats[action.tokenNo]
+        if instance.obser_feats is not None:
+            word_feats = instance.obser_feats[action.tokenNo]
             for i, feat in enumerate(word_feats):
                 features["feat %d" % i] = feat
 
