@@ -9,7 +9,7 @@ from imitation.stage import Stage
 import random
 from copy import copy, deepcopy
 
-class WordPredictor(Stage):
+class WordTagger(Stage):
 
     class Action(object):
         def __init__(self):
@@ -25,16 +25,16 @@ class WordPredictor(Stage):
             return newone
 
     # the agenda for word prediction is one action per token
-    def __init__(self, state=None, structuredInstance=None, optArg=None):
-        super(WordPredictor, self).__init__()
+    def __init__(self, state=None, instance=None, opt_arg=None):
+        super(WordTagger, self).__init__()
         self.possibleLabels = ["OK", "BAD"] # TODO: Whatever is the gold standard, could make it data dependent
         # Assume 0 indexing for the tokens
-        if structuredInstance == None:
+        if instance == None:
             return
-        for tokenNo, token in enumerate(structuredInstance.input.tokens):
-            newAction = WordPredictor.Action()
-            newAction.tokenNo = tokenNo
-            self.agenda.append(newAction)
+        for tokenNo, token in enumerate(instance.input.tokens):
+            new_action = WordTagger.Action()
+            new_action.tokenNo = tokenNo
+            self.agenda.append(new_action)
 
     def optimalPolicy(self, state, structuredInstance, action):
         # this returns the gold label for the action token as stated in the instance gold in instace.output

@@ -5,7 +5,7 @@ import sys
 import os
 from numpy.f2py.auxfuncs import throw_error
 from imitation.imitationLearner import ImitationLearner
-from wordPredictor import WordPredictor
+from word_tagger import WordTagger
 from imitation.structuredInstance import StructuredInput
 from imitation.structuredInstance import StructuredOutput
 from imitation.structuredInstance import StructuredInstance
@@ -16,7 +16,7 @@ from imitation.state import State
 class WQE(ImitationLearner):
 
     # specify the stages
-    stages = [[WordPredictor, None]]            
+    stages = [[WordTagger, None]]            
     def __init__(self):        
         super(WQE,self).__init__()
 
