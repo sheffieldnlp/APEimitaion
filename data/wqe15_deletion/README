@@ -1,0 +1,11 @@
+This is a version of the Automatic Post-Editing dataset 
+from 2015 (http://www.statmt.org/wmt15/ape-task.html) 
+reduced to only consider deletions as post-editing actions, 
+i.e. the corrected translation can be obtained only by deleting words.
+
+Each directory train/dev/test contains the following:
+- *.source: the input to the MT system
+- *.target: the output of the MT system
+- *.pe: the post-edited output, i.e. gold standard
+- *.features: the features for each word in the target
+- *.align: a sequence actions (A=accept, D=Delete) for each word in the target that converts the target into the post-edited version

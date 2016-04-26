@@ -13,7 +13,6 @@ from imitation.structuredInstance import EvalStats
 from imitation.state import State
 import numpy
 
-# TODO: Change WQE to APE
 class APE(ImitationLearner):
 
     # specify the stages
@@ -97,18 +96,25 @@ class APEInstance(StructuredInstance):
         """
         result = []
         for token in align:
-            if token == "A" or token == "S":
+            if token == "A": #  or token == "S":
                 result.append("KEEP")
             elif token == "D":
                 result.append("REMOVE")
-            elif token == "I":
-                pass # making insertions explicit on purpose
+            else:
+                print "ACTION OTHER THAN KEEP/DELETE IN THE ALIGNMENT"
+            #elif token == "I":
+            #    pass # making insertions explicit on purpose
 
+        # AV: Added this check, which shouldn't fail
+        if len(result) != len(self.input.tokens):
+            print "FEWER ACTIONS THAN INPUT WORDS IN THE ALIGNMENT"
+
+        # AV: Removed this since the alignments don't have insertions any more.
         # Having insertions ignored can make the alignment has less tags
         # than the input. We pad then with "KEEP" tokens. This is probably
         # wrong though...
-        while len(result) < len(self.input.tokens):
-            result.append("KEEP")
+        #while len(result) < len(self.input.tokens):
+        #    result.append("KEEP")
         #print result
         #print self.input.tokens
         #print self.output.tokens

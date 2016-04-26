@@ -1,5 +1,3 @@
-# TODO: rename to wordPredictor 
-
 from _mycollections import mydefaultdict
 from mydouble import mydouble, counts
 
@@ -38,11 +36,8 @@ class WordPredictor(Stage):
 
     def optimalPolicy(self, state, instance, action):
         # this comes up with the next action in the sequence to convert the input to the correct output
-        # TODO: needs to infer the action given the input and output 
-        #return instance.output.align[action.tokenNo]
-        #print instance.input.tokens
-        #print instance.output.tokens
-        #print action.tokenNo
+        # needs to infer the action given the input and output
+        # AV: Assuming only KEEP/DELETE actions, this should be fine 
         return instance.align[action.tokenNo] # not sure about this...
 
     def updateWithAction(self, state, action, instance):

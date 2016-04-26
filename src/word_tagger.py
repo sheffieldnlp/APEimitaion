@@ -1,5 +1,3 @@
-# TODO: rename to wordTagger
-
 from _mycollections import mydefaultdict
 from mydouble import mydouble, counts
 

@@ -51,14 +51,14 @@ model = ape.APE()
 
 # set the params
 params = ape.APE().params()
-# Setting this to one means on iteration, i.e. exact imitation. The learning rate becomes irrelevant then
+# Setting this to one means on iteration, i.e. exact imitation.
+# The learning rate and the samples per action becomes irrelevant then
 params.iterations = 1
 params.learningParam = 0.3
 params.samplesPerAction = 1
 
 #print train_instances
 model.train(train_instances, "temp", params)
-# TODO: This is a hack. Probably the state initialization should happen in the beginning of predict
 
 #state = State()
 #model.predict(test_instances, state)
