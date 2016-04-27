@@ -42,7 +42,7 @@ def get_features(_dir, mode):
         
     
 
-train_instances = load_data(TRAIN_DIR, 'train')[:100]
+train_instances = load_data(TRAIN_DIR, 'train')#[:100]
 test_instances = load_data(TEST_DIR, 'test')
 
 #print [(inst.input.tokens, inst.output.tags) for inst in train_instances[:5]]

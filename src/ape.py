@@ -107,7 +107,8 @@ class APEInstance(StructuredInstance):
 
         # AV: Added this check, which shouldn't fail
         if len(result) != len(self.input.tokens):
-            print "FEWER ACTIONS THAN INPUT WORDS IN THE ALIGNMENT"
+            print "FEWER OR MORE ACTIONS THAN INPUT WORDS IN THE ALIGNMENT"
+            print " ".join(self.input.tokens)
 
         # AV: Removed this since the alignments don't have insertions any more.
         # Having insertions ignored can make the alignment has less tags
