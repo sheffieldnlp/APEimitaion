@@ -8,8 +8,8 @@ try:
     TRAIN_DIR = sys.argv[1]
     TEST_DIR = sys.argv[2]
 except IndexError:
-    TRAIN_DIR = '../data/wqe15/train'
-    TEST_DIR = '../data/wqe15/test'
+    TRAIN_DIR = '../data/ape15_deletion/train'
+    TEST_DIR = '../data/ape15_deletion/test'
 
 
 def load_data(_dir, mode):
