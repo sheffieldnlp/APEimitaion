@@ -1,0 +1,3 @@
+python pp_del_only.py ../wqe15/train/train.align ../wqe15/train/train.source ../wqe15/train/train.target ../wqe15/train/train.pe ../wqe15/train/train.features train/train.align train/train.source train/train.target train/train.pe train/train.features
+python pp_del_only.py ../wqe15/dev/dev.align ../wqe15/dev/dev.source ../wqe15/dev/dev.target ../wqe15/dev/dev.pe ../wqe15/dev/dev.features dev/dev.align dev/dev.source dev/dev.target dev/dev.pe dev/dev.features
+python pp_del_only.py ../wqe15/test/test.align ../wqe15/test/test.source ../wqe15/test/test.target ../wqe15/test/test.pe ../wqe15/test/test.features test/test.align test/test.source test/test.target test/test.pe test/test.features

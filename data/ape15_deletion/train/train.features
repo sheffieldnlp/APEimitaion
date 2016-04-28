@@ -16957,6 +16957,43 @@
 16.0	23.0	0.695652173913	Asia-Pacífico	de	.	summit	Cooperation	.	0	0	1	0	0	0	0.1	0.2	0.1	0	0	0	NC	NN	4	0	OK
 16.0	23.0	0.695652173913	.	Asia-Pacífico	_END_	.	summit	_END_	0	1	0	0	0	0	0.2	0.1	0.1	0	0	1	FS	SENT	0	0	OK
 
+35.0	36.0	0.972222222222	Incluso	_START_	los	Even	_START_	the	0	0	1	0	0	0	0.2	0.3	0.1	0	0	0	ADV	RB	14	1	OK
+35.0	36.0	0.972222222222	los	Incluso	niños	the	Even	most	1	0	0	0	0	0	0.3	0.1	0.2	0	0	0	ART	DT	0	0	OK
+35.0	36.0	0.972222222222	niños	los	más	kids	selfish	did	0	0	0	0	0	0	0.1	0.2	0.1	0	0	0	NC	NNS	7	0	OK
+35.0	36.0	0.972222222222	más	niños	fantásticamente	most	the	fantastically	1	0	0	0	0	0	0.2	0.1	0.1	0	0	1	ADV	RBS	5	0	OK
+35.0	36.0	0.972222222222	fantásticamente	más	egoístas	fantastically	most	selfish	0	0	0	0	0	0	0.1	0.1	0.2	0	0	0	ADJ	RB	1	0	BAD
+35.0	36.0	0.972222222222	egoístas	fantásticamente	hicieron	selfish	fantastically	kids	0	0	0	0	0	0	0.1	0.2	0.3	0	0	0	ADJ	JJ	1	0	OK
+35.0	36.0	0.972222222222	hicieron	egoístas	lo	did|they	kids	could	0	0	0	0	0	0	0.2	0.3	0.3	0	0	1	VLfin	VVD|PP	13	0	OK
+35.0	36.0	0.972222222222	lo	hicieron	que	what	did	they	1	0	0	0	0	0	0.3	0.3	0.1	0	0	1	ART	WP	0	0	OK
+35.0	36.0	0.972222222222	que	lo	pudieron	they	what	could	1	0	0	0	0	0	0.3	0.1	0.2	0	0	1	CQUE	PP	0	0	OK
+35.0	36.0	0.972222222222	pudieron	que	para	could	they	to	0	0	0	0	0	0	0.1	0.2	0.3	0	0	0	VLfin	MD	0	0	OK
+35.0	36.0	0.972222222222	para	pudieron	contribuir	to	could	contribute	1	0	0	0	0	0	0.2	0.3	0.3	0	0	0	CSUBI	TO	0	0	OK
+35.0	36.0	0.972222222222	contribuir	para	al	contribute	to	to	0	0	0	0	0	0	0.3	0.3	0.1	0	0	1	VLinf	VV	4	3	OK
+35.0	36.0	0.972222222222	al	contribuir	bienestar	to	contribute	the	1	0	0	0	0	0	0.3	0.1	0.2	0	0	1	PAL	TO	0	1	OK
+35.0	36.0	0.972222222222	bienestar	al	general	welfare	general	of	0	0	0	0	0	0	0.1	0.2	0.3	0	0	1	NC	NN	3	4	OK
+35.0	36.0	0.972222222222	general	bienestar	del	general	the	welfare	0	0	0	0	0	0	0.2	0.3	0.3	0	0	1	ADJ	JJ	10	8	OK
+35.0	36.0	0.972222222222	del	general	lugar	the|of|the	to	place	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	PDEL	DT|IN|DT	0	0	OK
+35.0	36.0	0.972222222222	lugar	del	,	place	the	,	0	0	0	0	0	0	0.3	0.3	0.3	0	0	1	NC	NN	32	12	OK
+35.0	36.0	0.972222222222	,	lugar	y	,	place	and	0	1	0	0	0	0	0.3	0.3	0.3	0	0	1	CM	,	0	0	BAD
+35.0	36.0	0.972222222222	y	,	no	and	,	there	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	CC	CC	0	0	BAD
+35.0	36.0	0.972222222222	no	y	había	not	was	a	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	NEG	RB	1	1	BAD
+35.0	36.0	0.972222222222	había	no	un	there|was	and	not	1	0	0	0	0	0	0.3	0.3	0.1	0	0	0	VHfin	EX|VBD	4	0	BAD
+35.0	36.0	0.972222222222	un	había	ápice	a	not	shred	1	0	0	0	0	0	0.3	0.1	0.2	0	0	1	ART	DT	7	0	BAD
+35.0	36.0	0.972222222222	ápice	un	de	shred	a	of	0	0	0	0	0	0	0.1	0.2	0.3	0	0	0	NC	NN	3	0	BAD
+35.0	36.0	0.972222222222	de	ápice	duda	of	shred	doubt	1	0	0	0	0	0	0.2	0.3	0.3	0	0	1	PREP	IN	0	0	BAD
+35.0	36.0	0.972222222222	duda	de	que	doubt	of	that	0	0	0	0	0	0	0.3	0.3	0.3	0	0	1	NC	NN	4	4	BAD
+35.0	36.0	0.972222222222	que	duda	todo	that	doubt	everyone	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	CQUE	IN/that	0	0	BAD
+35.0	36.0	0.972222222222	todo	que	el	everyone	that	felt	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	QU	NN	0	3	BAD
+35.0	36.0	0.972222222222	el	todo	mundo	__unaligned__	__unaligned__	__unaligned__	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	ART	__unaligned__	0	0	BAD
+35.0	36.0	0.972222222222	mundo	el	se	everyone	that	felt	0	0	0	0	0	0	0.3	0.3	0.1	0	0	1	NC	NN	0	5	BAD
+35.0	36.0	0.972222222222	se	mundo	sentía	felt	everyone	happier	1	0	0	0	0	0	0.3	0.1	0.2	0	0	1	SE	VVD	17	0	BAD
+35.0	36.0	0.972222222222	sentía	se	más	felt	everyone	happier	0	0	0	0	0	0	0.1	0.2	0.3	0	0	0	VLfin	VVD	17	0	BAD
+35.0	36.0	0.972222222222	más	sentía	feliz	happier	felt	for	1	0	0	0	0	0	0.2	0.3	0.3	0	0	1	ADV	JJR	4	0	BAD
+35.0	36.0	0.972222222222	feliz	más	por	happier	felt	for	0	0	0	0	0	0	0.3	0.3	0.3	0	0	1	ADJ	JJR	4	8	BAD
+35.0	36.0	0.972222222222	por	feliz	ello	for	happier	it	1	0	0	0	0	0	0.3	0.3	0.3	0	0	1	PREP	IN	0	1	BAD
+35.0	36.0	0.972222222222	ello	por	.	it	for	.	0	0	0	0	0	0	0.3	0.3	0.1	0	0	1	PPX	PP	1	0	BAD
+35.0	36.0	0.972222222222	.	ello	_END_	.	it	_END_	0	1	0	0	0	0	0.3	0.1	0.1	0	0	1	FS	SENT	0	0	OK
+
 12.0	11.0	1.09090909091	"	_START_	Tuve	"	_START_	I	0	1	0	0	0	0	0.2	0.1	0.2	0	0	1	QT	``	0	0	OK
 12.0	11.0	1.09090909091	Tuve	"	un	I|had	"	a	0	0	1	0	0	0	0.1	0.2	0.1	0	0	0	VLfin	PP|VHD	4	0	OK
 12.0	11.0	1.09090909091	un	Tuve	sueño	a	had	really	1	0	0	0	0	0	0.2	0.1	0.2	0	0	1	ART	DT	7	0	OK
@@ -22370,6 +22407,14 @@
 7.0	8.0	0.875	Force	Air	One	Force	Air	One	0	0	1	0	0	0	0.1	0.1	0.2	0	0	0	VLfin	NP	19	0	OK
 7.0	8.0	0.875	One	Force	.	One	Force	.	0	0	1	0	0	0	0.1	0.2	0.1	0	0	0	NC	CD	9	0	OK
 7.0	8.0	0.875	.	One	_END_	.	One	_END_	0	1	0	0	0	0	0.2	0.1	0.1	0	0	1	FS	SENT	0	0	OK
+
+7.0	7.0	1.0	Vea	_START_	su	Watch	_START_	Her	0	0	1	0	0	0	0.1	0.2	0.3	0	0	0	VLfin	NP	13	0	OK
+7.0	7.0	1.0	su	Vea	nuevo	Her	Watch	New	1	0	0	0	0	0	0.2	0.3	0.1	0	0	0	PPO	NP	0	0	OK
+7.0	7.0	1.0	nuevo	su	video	New	Her	Music	0	0	0	0	0	0	0.3	0.1	0.1	0	0	0	ADJ	NP	12	9	OK
+7.0	7.0	1.0	video	nuevo	musical	Music	New	Video	0	0	0	0	0	0	0.1	0.1	0.2	0	0	0	NC	NP	5	0	OK
+7.0	7.0	1.0	musical	video	aquí	Video	Music	HERE	0	0	0	0	0	0	0.1	0.2	0.1	0	0	0	ADJ	NP	4	3	OK
+7.0	7.0	1.0	aquí	musical	!	HERE	Video	!	0	0	0	0	0	0	0.2	0.1	0.1	0	0	1	ADV	RB	7	0	OK
+7.0	7.0	1.0	!	aquí	_END_	!	HERE	_END_	0	1	0	0	0	0	0.1	0.1	0.1	0	0	1	FS	SENT	0	0	OK
 
 5.0	6.0	0.833333333333	,	_START_	Tony	Tony	_START_	Goldwyn	0	1	0	0	0	0	0.2	0.1	0.1	0	0	0	CM	NP	0	0	BAD
 5.0	6.0	0.833333333333	Tony	,	Goldwyn	Tony|Goldwyn	_START_	in	0	0	1	0	0	0	0.1	0.1	0.2	0	0	1	NP	NP|NP	0	0	OK
