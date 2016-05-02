@@ -11,6 +11,9 @@ from imitation.structuredInstance import StructuredOutput
 from imitation.structuredInstance import StructuredInstance
 from imitation.structuredInstance import EvalStats
 from imitation.state import State
+from sklearn.metrics import f1_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 
 
 class WQE(ImitationLearner):
@@ -46,11 +49,14 @@ class WQEOutput(StructuredOutput):
             raise
         
         wqe_eval_stats = WQEEvalStats()
-        for i in xrange(len(self.tags)):
-            if self.tags[i] != other.tags[i]:
-                wqe_eval_stats.loss+=1
+        f1_bad = f1_score(self.tags, other.tags, labels=['OK', 'BAD'], pos_label='BAD')
+        f1_ok = f1_score(self.tags, other.tags, labels=['OK', 'BAD'], pos_label='OK')
+        wqe_eval_stats.loss = 1 - (f1_bad * f1_ok)
+        #for i in xrange(len(self.tags)):
+        #    if self.tags[i] != other.tags[i]:
+        #        wqe_eval_stats.loss+=1
         
-        wqe_eval_stats.accuracy = (len(self.tags) - wqe_eval_stats.loss) / float(len(self.tags))
+        #wqe_eval_stats.accuracy = (len(self.tags) - wqe_eval_stats.loss) / float(len(self.tags))
         return wqe_eval_stats
 
 

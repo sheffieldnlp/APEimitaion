@@ -21,9 +21,9 @@ def weighted_fmeasure(y_true, y_pred):
 
 # scoring results
 # print a full score report including statistical significance
-def score_wmt_plain(ref_file, hyp_file, n_significance_tests=20):
-    ref_tags = read_tag_file(ref_file)
-    hyp_tags = read_tag_file(hyp_file)
+def score_wmt_plain(ref_tags, hyp_tags, logger, n_significance_tests=20):
+    #ref_tags = read_tag_file(ref_file)
+    #hyp_tags = read_tag_file(hyp_file)
 
     assert len(ref_tags) == len(hyp_tags), 'ref file and hyp file must have the same number of tags'
     for ref_line, hyp_line in zip(ref_tags, hyp_tags):
@@ -62,12 +62,14 @@ def score_wmt_plain(ref_file, hyp_file, n_significance_tests=20):
     avg_weighted = np.average(random_weighted_results)
     logger.info('Random Baseline Using the Class priors for \'OK\' and \'BAD\' Tags:')
     logger.info('two class f1 random average score: {}'.format(avg_random_class))
+    logger.info('f1 bad times f1 ok (average): {}'.format(avg_random_class[0] * avg_random_class[1]))
     logger.info('weighted f1 random average score: {}'.format(avg_weighted))
 
     actual_class_f1 = f1_score(flat_ref_tags, flat_hyp_tags, average=None)
     actual_average_f1 = weighted_fmeasure(flat_ref_tags, flat_hyp_tags)
     logger.info('YOUR RESULTS: ')
     logger.info('two class f1: {}'.format(actual_class_f1))
+    logger.info('f1 bad times f1 ok (average): {}'.format(actual_class_f1[0] * actual_class_f1[1]))
     logger.info('weighted f1: {}'.format(actual_average_f1))
 
     # END EVALUATION

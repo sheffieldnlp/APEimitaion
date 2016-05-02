@@ -59,9 +59,11 @@ class WordTagger(Stage):
 
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
         # e.g. the previous action
-        if len(self.actionsTaken)> 0:
-            features["prevPrediction="+ self.actionsTaken[-1].label] = 1
-        
+        if len(self.actionsTaken) > 0:
+            features["prevPrediction=" + self.actionsTaken[-1].label] = 1
+            if len(self.actionsTaken) > 1:
+                features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
+
         # features based on earlier stages via the state variable.
 
         return features
