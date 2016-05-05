@@ -49,20 +49,39 @@ class WordTagger(Stage):
         features = mydefaultdict(mydouble)        
         # e.g the word itself that we are tagging
         # assuming that the instance has a parsedSentence field with appropriate structure
-        features["currentWord="+ structuredInstance.input.tokens[action.tokenNo]] = 1
+        #features["currentWord="+ structuredInstance.input.tokens[action.tokenNo]] = 1
 
         # More features, from the instance itself
         if structuredInstance.obser_feats is not None:
             word_feats = structuredInstance.obser_feats[action.tokenNo]
             for i, feat in enumerate(word_feats):
-                features["feat %d" % i] = feat
+                if feat.lower() == 'nan': # ugly workaround to deal with 'NaN' as a word...
+                    features["feat %d " % i + feat] = 1
+                else:
+                    try:
+                        features["feat %d" % i] = float(feat)
+                    except ValueError: # string feature
+                        features["feat %d " % i + feat] = 1
 
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
         # e.g. the previous action
-        if len(self.actionsTaken) > 0:
-            features["prevPrediction=" + self.actionsTaken[-1].label] = 1
-            if len(self.actionsTaken) > 1:
-                features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
+        #if len(self.actionsTaken) > 0:
+        #    features["prevPrediction=" + self.actionsTaken[-1].label] = 1
+        #if len(self.actionsTaken) > 1:
+        #    features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
+        #    features["prevPredBigram="  + self.actionsTaken[-2].label + self.actionsTaken[-1].label] = 1
+        #if len(self.actionsTaken) > 2:
+        #    features["prevPrediction=" + self.actionsTaken[-3].label] = 1
+        #    features["prevPredTrigram="  + self.actionsTaken[-3].label + 
+        #             self.actionsTaken[-2].label +
+        #             self.actionsTaken[-1].label] = 1
+
+        # Total number of mistakes
+        mistakes = 0
+        for action in self.actionsTaken:
+            if action.label == 'BAD':
+                mistakes += 1
+        #features["prevMistakes="] = mistakes
 
         # features based on earlier stages via the state variable.
 
