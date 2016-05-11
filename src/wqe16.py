@@ -74,7 +74,6 @@ train_instances = load_data(TRAIN_DIR, 'train')#[:100]
 dev_instances = load_data(DEV_DIR, 'dev')
 test_instances = load_data(TEST_DIR, 'test', test=True)
 
-
 model = wqe.WQE()
 
 # set the params
@@ -112,6 +111,7 @@ with open('output_dev_' + sys.argv[1] + '_' + sys.argv[2], 'w') as f:
 
 results_test = []
 preds_test = []
+
 for instance in test_instances:
     state = State()
     try:

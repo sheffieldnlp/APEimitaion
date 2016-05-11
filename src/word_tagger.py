@@ -86,7 +86,7 @@ class WordTagger(Stage):
         for action in self.actionsTaken:
             if action.label == 'BAD':
                 mistakes += 1
-        #features["prevMistakes="] = mistakes
+        features["prevMistakes="] = mistakes
 
         # features based on earlier stages via the state variable.
 
