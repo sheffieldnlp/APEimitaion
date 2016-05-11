@@ -65,23 +65,23 @@ class WordTagger(Stage):
 
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
         # e.g. the previous action
-        #if len(self.actionsTaken) > 0:
-        #    features["prevPrediction=" + self.actionsTaken[-1].label] = 1
-        #if len(self.actionsTaken) > 1:
-        #    features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
-        #    features["prevPredBigram="  + self.actionsTaken[-2].label + self.actionsTaken[-1].label] = 1
-        #if len(self.actionsTaken) > 2:
-        #    features["prevPrediction=" + self.actionsTaken[-3].label] = 1
-        #    features["prevPredTrigram="  + self.actionsTaken[-3].label + 
-        #             self.actionsTaken[-2].label +
-        #             self.actionsTaken[-1].label] = 1
+        if len(self.actionsTaken) > 0:
+            features["prevPrediction=" + self.actionsTaken[-1].label] = 1
+        if len(self.actionsTaken) > 1:
+            features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
+            features["prevPredBigram="  + self.actionsTaken[-2].label + self.actionsTaken[-1].label] = 1
+        if len(self.actionsTaken) > 2:
+            features["prevPrediction=" + self.actionsTaken[-3].label] = 1
+            features["prevPredTrigram="  + self.actionsTaken[-3].label + 
+                     self.actionsTaken[-2].label +
+                     self.actionsTaken[-1].label] = 1
 
         # Total number of mistakes
         mistakes = 0
         for action in self.actionsTaken:
             if action.label == 'BAD':
                 mistakes += 1
-        #features["prevMistakes="] = mistakes
+        features["prevMistakes="] = mistakes
 
         # features based on earlier stages via the state variable.
 
