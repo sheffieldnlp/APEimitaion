@@ -156,7 +156,7 @@ class ImitationLearner(object):
                 # we remove hapax legomena in every iteration
                 # remember, they might appear multiple times due to going over the same training data in every iteration
                 stageNo2training[stageNo] = Instance.removeHapaxLegomena(stageNo2training[stageNo])
-                self.stageNo2model[stageNo] = AROW.trainOpt(stageNo2training[stageNo])
+                self.stageNo2model[stageNo] = AROW.trainOpt(stageNo2training[stageNo], rounds=5)
                     
                 self.stageNo2model[stageNo].save(modelStageFileName)
 

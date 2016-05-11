@@ -55,13 +55,18 @@ class WordTagger(Stage):
         if structuredInstance.obser_feats is not None:
             word_feats = structuredInstance.obser_feats[action.tokenNo]
             for i, feat in enumerate(word_feats):
-                if feat.lower() == 'nan': # ugly workaround to deal with 'NaN' as a word...
+                if type(feat) == float:
+                    features["feat %d" % i] = feat
+                else: # string
                     features["feat %d " % i + feat] = 1
-                else:
-                    try:
-                        features["feat %d" % i] = float(feat)
-                    except ValueError: # string feature
-                        features["feat %d " % i + feat] = 1
+                #if feat.lower() == 'nan' or 'infinity' in feat.lower(): # ugly workaround to deal with 'NaN' as a word...
+                #    features["feat %d " % i + feat] = 1
+                #else:
+                #    try:
+                #        features["feat %d" % i] = float(feat)
+                #        #print feat
+                #    except ValueError: # string feature
+                #        features["feat %d " % i + feat] = 1
 
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
         # e.g. the previous action
