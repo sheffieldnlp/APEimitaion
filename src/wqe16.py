@@ -74,6 +74,11 @@ train_instances = load_data(TRAIN_DIR, 'train')#[:100]
 dev_instances = load_data(DEV_DIR, 'dev')
 test_instances = load_data(TEST_DIR, 'test', test=True)
 
+import random
+import numpy
+random.seed(13)           
+numpy.random.seed(13)
+
 model = wqe.WQE()
 
 # set the params
