@@ -9,6 +9,7 @@ from mydouble import mydouble, counts
 from state import *
 from copy import deepcopy
 from structuredInstance import *
+from eval_wqe import score_wmt_plain
 
 class ImitationLearner(object):
     
@@ -80,7 +81,9 @@ class ImitationLearner(object):
             self.samplesPerAction = 3
 
     #@profile
-    def train(self, structuredInstances, modelFileName, params, dev_instances=None, dev_name=None):
+    def train(self, structuredInstances, modelFileName, params, 
+              dev_instances=None, dev_name=None,
+              test_instances=None, test_name=None):
         # for each stage create a dataset
         stageNo2training = []
         for stage in self.stages:
@@ -177,7 +180,7 @@ class ImitationLearner(object):
                 for instance in dev_instances:
                     state = State()
                     try:
-                        pred = model.predict(instance, state).tags
+                        pred = self.predict(instance, state).tags
                     except:
                         print instance.input.tokens
                         raise
@@ -187,6 +190,37 @@ class ImitationLearner(object):
                 with open(dev_name, 'w') as f:
                     f.write('\n'.join(results_dev))
                     f.write('\n')
+                import logging
+                logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+                logger = logging.getLogger('wmt_eval_logger')
+                refs_eval = [t.output.tags for t in dev_instances]
+                print "RESULTS DEV"
+                score_wmt_plain(refs_eval, preds_dev, logger)
+
+            # Calculate loss on test set
+            if test_instances is not None:
+                results_test = []
+                preds_test = []
+                for instance in test_instances:
+                    state = State()
+                    try:
+                        pred = self.predict(instance, state).tags
+                    except:
+                        print instance.input.tokens
+                        raise
+                    results_test.append(' '.join(pred))
+                    preds_test.append(pred)
+
+                with open(test_name, 'w') as f:
+                    f.write('\n'.join(results_test))
+                    f.write('\n')
+                import logging
+                logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+                logger = logging.getLogger('wmt_eval_logger')
+                refs_eval = [t.output.tags for t in test_instances]
+                print "RESULTS TEST"
+                score_wmt_plain(refs_eval, preds_test, logger)
+
     # TODO
     #def load(self, modelFileName):
     #    self.model.load(modelFileName + "/model_model")

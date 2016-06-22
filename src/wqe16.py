@@ -71,8 +71,8 @@ def get_dev_metrics(results, test_instances):
     
 
 train_instances = load_data(TRAIN_DIR, 'train')[:10]
-dev_instances = load_data(DEV_DIR, 'dev')[:10]
-test_instances = load_data(TEST_DIR, 'test', test=True)
+dev_instances = load_data(DEV_DIR, 'dev')#[:10]
+test_instances = load_data(TEST_DIR, 'test')#, test=True)
 
 import random
 import numpy
@@ -88,8 +88,10 @@ params.iterations = int(sys.argv[1])
 params.learningParam = float(sys.argv[2])
 params.samplesPerAction = 1
 
-model.train(train_instances, "temp", params, dev_instances, 
-            dev_name='output_dev_' + sys.argv[1] + '_' + sys.argv[2])
+model.train(train_instances, "temp", params, dev_instances=dev_instances, 
+            dev_name='output_dev_' + sys.argv[1] + '_' + sys.argv[2],
+            test_instances=test_instances,
+            test_name='output_test_' + sys.argv[1] + '_' + sys.argv[2])
 # TODO: This is a hack. Probably the state initialization should happen in the beginning of predict
 
 #state = State()
@@ -133,12 +135,12 @@ with open('output_test_' + sys.argv[1] + '_' + sys.argv[2], 'w') as f:
     f.write('\n')
 
 
-refs_eval = [t.output.tags for t in dev_instances]
+# refs_eval = [t.output.tags for t in dev_instances]
 
 
-import logging
-logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-logger = logging.getLogger('wmt_eval_logger')
-score_wmt_plain(refs_eval, preds_dev, logger)
+# import logging
+# logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+# logger = logging.getLogger('wmt_eval_logger')
+# score_wmt_plain(refs_eval, preds_dev, logger)
 
 #print "F1: %.5f\nF1BAD: %.5f\nF1OK: %.5f\nHAMMING: %.5f" % get_test_metrics(results, test_instances)
