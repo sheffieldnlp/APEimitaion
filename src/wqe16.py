@@ -12,6 +12,7 @@ from eval_wqe import score_wmt_plain
 TRAIN_DIR = '../data/wqe16/train'
 DEV_DIR = '../data/wqe16/dev'
 TEST_DIR = '../data/wqe16/test'
+MODE = 'v-dagger'
 
 
 def load_data(_dir, mode, test=False):
@@ -25,7 +26,7 @@ def load_data(_dir, mode, test=False):
     sent_lens = [len(sent) for sent in mt]
     #print sent_lens
     feat_tensor = get_features(_dir, mode, sent_lens)
-    instances = [wqe.WQEInstance(x, y, feats) for x, y, feats in zip(mt, tags, feat_tensor)]
+    instances = [wqe.WQEInstance(x, y, feats, mode=MODE) for x, y, feats in zip(mt, tags, feat_tensor)]
     return instances
 
 
@@ -70,7 +71,7 @@ def get_dev_metrics(results, test_instances):
     return np.mean(f_scores), np.mean(f_bad), np.mean(f_ok), np.mean(hamm_scores)
     
 
-train_instances = load_data(TRAIN_DIR, 'train')[:10]
+train_instances = load_data(TRAIN_DIR, 'train')[:int(sys.argv[3])]
 dev_instances = load_data(DEV_DIR, 'dev')#[:10]
 test_instances = load_data(TEST_DIR, 'test')#, test=True)
 
@@ -79,7 +80,7 @@ import numpy
 random.seed(13)           
 numpy.random.seed(13)
 
-model = wqe.WQE()
+model = wqe.WQE(mode=MODE)
 
 # set the params
 params = wqe.WQE.params()
@@ -88,59 +89,13 @@ params.iterations = int(sys.argv[1])
 params.learningParam = float(sys.argv[2])
 params.samplesPerAction = 1
 
+
+###
+# Dev and test reporting is now done inside training
+###
+
 model.train(train_instances, "temp", params, dev_instances=dev_instances, 
-            dev_name='output_dev_' + sys.argv[1] + '_' + sys.argv[2],
+            dev_name='output_dev_' + sys.argv[2],
             test_instances=test_instances,
-            test_name='output_test_' + sys.argv[1] + '_' + sys.argv[2])
-# TODO: This is a hack. Probably the state initialization should happen in the beginning of predict
+            test_name='output_test_' + sys.argv[2])
 
-#state = State()
-#model.predict(test_instances, state)
-#print model.predict(test_instances[0], state).tags
-#print test_instances[0].output.tags
-#state = State()
-#print model.predict(test_instances[0], state).tags
-results_dev = []
-preds_dev = []
-for instance in dev_instances:
-    state = State()
-    try:
-        pred = model.predict(instance, state).tags
-    except:
-        print instance.input.tokens
-        raise
-    results_dev.append(' '.join(pred))
-    preds_dev.append(pred)
-
-with open('output_dev_' + sys.argv[1] + '_' + sys.argv[2], 'w') as f:
-    f.write('\n'.join(results_dev))
-    f.write('\n')
-
-
-results_test = []
-preds_test = []
-
-for instance in test_instances:
-    state = State()
-    try:
-        pred = model.predict(instance, state).tags
-    except:
-        print instance.input.tokens
-        raise
-    results_test.append(' '.join(pred))
-    preds_test.append(pred)
-
-with open('output_test_' + sys.argv[1] + '_' + sys.argv[2], 'w') as f:
-    f.write('\n'.join(results_test))
-    f.write('\n')
-
-
-# refs_eval = [t.output.tags for t in dev_instances]
-
-
-# import logging
-# logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-# logger = logging.getLogger('wmt_eval_logger')
-# score_wmt_plain(refs_eval, preds_dev, logger)
-
-#print "F1: %.5f\nF1BAD: %.5f\nF1OK: %.5f\nHAMMING: %.5f" % get_test_metrics(results, test_instances)

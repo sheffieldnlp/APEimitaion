@@ -20,8 +20,9 @@ class WQE(ImitationLearner):
 
     # specify the stages
     stages = [[WordTagger, None]]            
-    def __init__(self):        
+    def __init__(self, mode='v-dagger'):        
         super(WQE,self).__init__()
+        self.mode = mode
 
     def stateToPrediction(self, state, wqeInstance):
         """
@@ -31,7 +32,7 @@ class WQE(ImitationLearner):
         tags = []
         for action in state.currentStages[0].actionsTaken:
             tags.append(action.label)
-        return WQEOutput(tags)
+        return WQEOutput(tags, mode=self.mode)
 
     
 class WQEInput(StructuredInput):
@@ -40,8 +41,9 @@ class WQEInput(StructuredInput):
         
 
 class WQEOutput(StructuredOutput):
-    def __init__(self, tags):
+    def __init__(self, tags, mode):
         self.tags = tags
+        self.mode = mode
         
     def compareAgainst(self, other):
         if len(self.tags) != len(other.tags):
@@ -49,13 +51,14 @@ class WQEOutput(StructuredOutput):
             raise
         
         wqe_eval_stats = WQEEvalStats()
-        f1_bad = f1_score(self.tags, other.tags, labels=['OK', 'BAD'], pos_label='BAD')
-        f1_ok = f1_score(self.tags, other.tags, labels=['OK', 'BAD'], pos_label='OK')
-        wqe_eval_stats.loss = 1 - (f1_bad * f1_ok)
-        #for i in xrange(len(self.tags)):
-        #    if self.tags[i] != other.tags[i]:
-        #        wqe_eval_stats.loss+=1
-        
+        if self.mode == 'v-dagger':
+            f1_bad = f1_score(self.tags, other.tags, labels=['OK', 'BAD'], pos_label='BAD')
+            f1_ok = f1_score(self.tags, other.tags, labels=['OK', 'BAD'], pos_label='OK')
+            wqe_eval_stats.loss = 1 - (f1_bad * f1_ok)
+        elif self.mode == 'dagger':
+            for i in xrange(len(self.tags)):
+                if self.tags[i] != other.tags[i]:
+                    wqe_eval_stats.loss += 1
         #wqe_eval_stats.accuracy = (len(self.tags) - wqe_eval_stats.loss) / float(len(self.tags))
         return wqe_eval_stats
 
@@ -67,9 +70,9 @@ class WQEEvalStats(EvalStats):
 
 
 class WQEInstance(StructuredInstance):
-    def __init__(self, tokens, tags=None, obser_feats=None):
+    def __init__(self, tokens, tags=None, obser_feats=None, mode='v-dagger'):
         self.input = WQEInput(tokens)
-        self.output = WQEOutput(tags)
+        self.output = WQEOutput(tags, mode=mode)
         self.obser_feats = obser_feats # this should be a matrix feats x observations
 
 

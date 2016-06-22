@@ -187,14 +187,14 @@ class ImitationLearner(object):
                     results_dev.append(' '.join(pred))
                     preds_dev.append(pred)
 
-                with open(dev_name, 'w') as f:
+                with open(dev_name + '_' + str(iteration), 'w') as f:
                     f.write('\n'.join(results_dev))
                     f.write('\n')
                 import logging
                 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
                 logger = logging.getLogger('wmt_eval_logger')
                 refs_eval = [t.output.tags for t in dev_instances]
-                print "RESULTS DEV"
+                sys.stderr.write("RESULTS DEV\n")
                 score_wmt_plain(refs_eval, preds_dev, logger)
 
             # Calculate loss on test set
@@ -211,14 +211,14 @@ class ImitationLearner(object):
                     results_test.append(' '.join(pred))
                     preds_test.append(pred)
 
-                with open(test_name, 'w') as f:
+                with open(test_name + '_' + str(iteration), 'w') as f:
                     f.write('\n'.join(results_test))
                     f.write('\n')
                 import logging
                 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
                 logger = logging.getLogger('wmt_eval_logger')
                 refs_eval = [t.output.tags for t in test_instances]
-                print "RESULTS TEST"
+                sys.stderr.write("RESULTS TEST\n")
                 score_wmt_plain(refs_eval, preds_test, logger)
 
     # TODO
