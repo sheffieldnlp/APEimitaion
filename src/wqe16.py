@@ -70,8 +70,8 @@ def get_dev_metrics(results, test_instances):
     return np.mean(f_scores), np.mean(f_bad), np.mean(f_ok), np.mean(hamm_scores)
     
 
-train_instances = load_data(TRAIN_DIR, 'train')#[:100]
-dev_instances = load_data(DEV_DIR, 'dev')
+train_instances = load_data(TRAIN_DIR, 'train')[:10]
+dev_instances = load_data(DEV_DIR, 'dev')[:10]
 test_instances = load_data(TEST_DIR, 'test', test=True)
 
 import random
@@ -88,7 +88,8 @@ params.iterations = int(sys.argv[1])
 params.learningParam = float(sys.argv[2])
 params.samplesPerAction = 1
 
-model.train(train_instances, "temp", params)
+model.train(train_instances, "temp", params, dev_instances, 
+            dev_name='output_dev_' + sys.argv[1] + '_' + sys.argv[2])
 # TODO: This is a hack. Probably the state initialization should happen in the beginning of predict
 
 #state = State()

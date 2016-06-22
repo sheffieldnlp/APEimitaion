@@ -80,7 +80,7 @@ class ImitationLearner(object):
             self.samplesPerAction = 3
 
     #@profile
-    def train(self, structuredInstances, modelFileName, params):
+    def train(self, structuredInstances, modelFileName, params, dev_instances=None, dev_name=None):
         # for each stage create a dataset
         stageNo2training = []
         for stage in self.stages:
@@ -101,8 +101,7 @@ class ImitationLearner(object):
 
                 # check, is the current policy able to reproduce the gold?
                 structuredInstance.output.compareAgainst(newOutput)
-                
-                
+                                
                 stateCopy = State()
                 # for each action in every stage taken in predicting the MRL
                 for stageNo, stage in enumerate(state.currentStages):
@@ -171,7 +170,23 @@ class ImitationLearner(object):
                     dataFile.write(str(instance) + "\n")
                 dataFile.close()
 
+            # Calculate loss on dev set
+            if dev_instances is not None:
+                results_dev = []
+                preds_dev = []
+                for instance in dev_instances:
+                    state = State()
+                    try:
+                        pred = model.predict(instance, state).tags
+                    except:
+                        print instance.input.tokens
+                        raise
+                    results_dev.append(' '.join(pred))
+                    preds_dev.append(pred)
 
+                with open(dev_name, 'w') as f:
+                    f.write('\n'.join(results_dev))
+                    f.write('\n')
     # TODO
     #def load(self, modelFileName):
     #    self.model.load(modelFileName + "/model_model")
