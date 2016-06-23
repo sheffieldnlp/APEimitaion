@@ -95,8 +95,10 @@ params.samplesPerAction = 1
 # Dev and test reporting is now done inside training
 ###
 
+str_mode = '_'.join(sys.argv[2:])
+
 model.train(train_instances, "temp", params, dev_instances=dev_instances, 
-            dev_name='output_dev_' + sys.argv[2],
+            dev_name='output_dev_' + str_mode,
             test_instances=test_instances,
-            test_name='output_test_' + sys.argv[2])
+            test_name='output_test_' + str_mode)
 
