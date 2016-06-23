@@ -97,7 +97,7 @@ params.samplesPerAction = 1
 
 str_mode = '_'.join(sys.argv[2:])
 
-model.train(train_instances, "temp", params, dev_instances=dev_instances, 
+model.train(train_instances, str_mode, params, dev_instances=dev_instances, 
             dev_name='output_dev_' + str_mode,
             test_instances=test_instances,
             test_name='output_test_' + str_mode)
