@@ -19,10 +19,13 @@ from sklearn.metrics import recall_score
 class WQE(ImitationLearner):
 
     # specify the stages
-    stages = [[WordTagger, None]]            
-    def __init__(self, mode='v-dagger'):        
-        super(WQE,self).__init__()
+    #stages = [[WordTagger, None]]            
+    def __init__(self, mode='v-dagger', feat_mode='all'):        
+        self.stages = [[WordTagger, None]]            
+        super(WQE, self).__init__()
         self.mode = mode
+        self.feat_mode = feat_mode
+
 
     def stateToPrediction(self, state, wqeInstance):
         """

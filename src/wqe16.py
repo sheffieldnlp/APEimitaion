@@ -13,6 +13,7 @@ TRAIN_DIR = '../data/wqe16/train'
 DEV_DIR = '../data/wqe16/dev'
 TEST_DIR = '../data/wqe16/test'
 MODE = 'v-dagger'
+FEAT_MODE = 'all'
 
 
 def load_data(_dir, mode, test=False):
@@ -80,7 +81,7 @@ import numpy
 random.seed(13)           
 numpy.random.seed(13)
 
-model = wqe.WQE(mode=MODE)
+model = wqe.WQE(mode=MODE, feat_mode=FEAT_MODE)
 
 # set the params
 params = wqe.WQE.params()

@@ -44,7 +44,7 @@ class WordTagger(Stage):
         self.actionsTaken.append(action)
 
     # TODO: all the feature engineering goes here
-    def extractFeatures(self, state, structuredInstance, action):
+    def extractFeatures(self, state, structuredInstance, action, feat_mode):
         # initialize the sparse vector
         features = mydefaultdict(mydouble)        
         # e.g the word itself that we are tagging
@@ -70,23 +70,32 @@ class WordTagger(Stage):
 
         # features based on the previous predictionsof this stage are to be accessed via the self.actionsTaken
         # e.g. the previous action
-        if len(self.actionsTaken) > 0:
-            features["prevPrediction=" + self.actionsTaken[-1].label] = 1
-        if len(self.actionsTaken) > 1:
-            features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
-            features["prevPredBigram="  + self.actionsTaken[-2].label + self.actionsTaken[-1].label] = 1
-        if len(self.actionsTaken) > 2:
-            features["prevPrediction=" + self.actionsTaken[-3].label] = 1
-            features["prevPredTrigram="  + self.actionsTaken[-3].label + 
-                     self.actionsTaken[-2].label +
-                     self.actionsTaken[-1].label] = 1
+        #print "FEAT_MODE INSIDE: %s" % feat_mode
+        if feat_mode != 'none':
+            #### CRF-like
+            if len(self.actionsTaken) > 0:
+                features["prevPrediction=" + self.actionsTaken[-1].label] = 1
 
-        # Total number of mistakes
-        mistakes = 0
-        for action in self.actionsTaken:
-            if action.label == 'BAD':
-                mistakes += 1
-        features["prevMistakes="] = mistakes
+            #### HMM-like
+            if feat_mode == 'hmm' or feat_mode == 'all':
+                if len(self.actionsTaken) > 1:
+                    features["prevPredBigram="  + self.actionsTaken[-2].label + self.actionsTaken[-1].label] = 1
+
+            ### All features
+            if feat_mode == 'all':
+                if len(self.actionsTaken) > 1:
+                    features["prevPrediction2=" + self.actionsTaken[-2].label] = 1
+                if len(self.actionsTaken) > 2:
+                    features["prevPrediction3=" + self.actionsTaken[-3].label] = 1
+                    features["prevPredTrigram="  + self.actionsTaken[-3].label + 
+                             self.actionsTaken[-2].label +
+                             self.actionsTaken[-1].label] = 1
+                # Total number of mistakes
+                mistakes = 0
+                for action in self.actionsTaken:
+                    if action.label == 'BAD':
+                        mistakes += 1
+                features["prevMistakes="] = mistakes
 
         # features based on earlier stages via the state variable.
 

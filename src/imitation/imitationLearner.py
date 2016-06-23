@@ -44,7 +44,8 @@ class ImitationLearner(object):
                 currentAction = state.currentStages[state.currentStageNo].agenda.popleft()
                 # extract features and add them to the action 
                 # (even for the optimal policy, it doesn't need the features but they are needed later on)
-                currentAction.features = state.currentStages[state.currentStageNo].extractFeatures(state, structuredInstance, currentAction)
+                #print "FEAT_MODE: %s"  % self.feat_mode
+                currentAction.features = state.currentStages[state.currentStageNo].extractFeatures(state, structuredInstance, currentAction, self.feat_mode)
                 # the first condition is to avoid un-necessary calls to random which give me reproducibility headaches
                 if (optimalPolicyProb == 1.0) or (optimalPolicyProb > 0.0 and random.random() < optimalPolicyProb):
                     currentAction.label = state.currentStages[state.currentStageNo].optimalPolicy(state, structuredInstance, currentAction)
@@ -111,6 +112,7 @@ class ImitationLearner(object):
                     # Enter the new stage, starting from 0
                     stateCopy.currentStageNo += 1
                     stateCopy.currentStages.append(self.stages[stateCopy.currentStageNo][0](stateCopy, structuredInstance, self.stages[stateCopy.currentStageNo][1]))
+                    #print "CREATED STAGE"
                     for action in stage.actionsTaken:
                         # now get the costs
                         costs = {}
