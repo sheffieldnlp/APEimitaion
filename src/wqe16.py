@@ -12,8 +12,8 @@ from eval_wqe import score_wmt_plain
 TRAIN_DIR = '../data/wqe16/train'
 DEV_DIR = '../data/wqe16/dev'
 TEST_DIR = '../data/wqe16/test'
-MODE = 'v-dagger'
-FEAT_MODE = 'all'
+MODE = sys.argv[4]
+FEAT_MODE = sys.argv[5]
 
 
 def load_data(_dir, mode, test=False):
